@@ -1,5 +1,5 @@
 import React from 'react'
-import {Calendar, Card, Col, Divider, Row, Statistic} from "antd";
+import {Calendar, Col, Divider, List, Row, Statistic} from "antd";
 import DebtPie from "../../components/DebtPie/DebtPie";
 
 class Home extends React.Component<any> {
@@ -8,6 +8,28 @@ class Home extends React.Component<any> {
             balance: 17100,
             debt: 40121,
             savings:0,
+            monthDebt:[
+                {
+                    amount: 100,
+                    title:'花呗',
+                    day: 9,
+                },
+                {
+                    amount: 200,
+                    title:'借呗',
+                    day:4,
+                },
+                {
+                    amount:1000,
+                    tile:'秒贷',
+                    day:20
+                },
+                {
+                    amount:3900,
+                    title:'房租',
+                    day: 21
+                }
+            ],
             debtList: [
                 {
                     title:'花呗',
@@ -36,15 +58,32 @@ class Home extends React.Component<any> {
             ]
         }
     }
-
-    public handleDateCellRender(val:any) {
-        let day = val.date();
-        if (day === 20) {
-            return <Statistic value={-3900} prefix={'￥'} valueStyle={{color:'red'}}/>
-        } else {
-            return null
-        }
+    public getMonthDebtSum = () => {
+        let sum = 0
+        this.state.statistics.monthDebt.map((d) => {
+            sum += d.amount
+            return d
+        })
+        return sum
     }
+
+    private getCalendarData (day:number) {
+        let amount = undefined
+        for(let d of this.state.statistics.monthDebt) {
+            if(d.day === day) {
+                amount = d.amount
+            }
+        }
+        return amount
+    }
+    public handleDateCellRender = (val:any) => {
+        let amount = this.getCalendarData(val.date())
+        return amount ? <Statistic
+            valueStyle={{
+                color:'#d45',
+            }}
+            value={this.getCalendarData(val.date())}/> : ''
+    };
 
     render() {
         return (
@@ -57,7 +96,7 @@ class Home extends React.Component<any> {
                             precision={2}
                             valueStyle={{
                                 fontSize:'2em',
-                                color:'green'
+                                color:'green',
                             }}
                             value={this.state.statistics.balance}
                             prefix={'￥'}/>
@@ -108,12 +147,32 @@ class Home extends React.Component<any> {
                         <DebtPie/>
                     </Col>
                     <Col span={15}>
-                        <Calendar  fullscreen={false} dateCellRender={this.handleDateCellRender}/>
+                        <Calendar
+                            fullscreen={false}
+                            dateCellRender={this.handleDateCellRender}
+                            headerRender={this.calendarHeadRender}
+                        />
                     </Col>
                 </Row>
+
+                <Divider orientation={'left'}>Today</Divider>
+                <List>
+
+                </List>
             </div>
         );
     }
+
+    private calendarHeadRender = () => {
+        return <Statistic
+            valueStyle={{
+                padding: 10,
+                color: '#ff364e'
+            }}
+            value={this.getMonthDebtSum()}
+            prefix={'￥'}
+        />
+    };
 }
 
 export default Home
