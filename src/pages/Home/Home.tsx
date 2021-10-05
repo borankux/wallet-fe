@@ -1,6 +1,8 @@
 import React from 'react'
-import {Calendar, Col, Divider, List, Row, Statistic} from "antd";
+import {Calendar, Col, Divider, List, Row, Space, Statistic} from "antd";
 import DebtPie from "../../components/DebtPie/DebtPie";
+import {Column} from "@ant-design/charts";
+import Avatar from '../../assets/imgs/avatar.svg'
 
 class Home extends React.Component<any> {
     state = {
@@ -56,6 +58,69 @@ class Home extends React.Component<any> {
                     value: 1642.41
                 },
             ]
+        },
+        columnData: {
+            data: [
+                {
+                    name: 'Salary',
+                    month:'Feb.',
+                    amount:14000
+                },
+                {
+                    name: 'Salary',
+                    month:'Mar.',
+                    amount:13500
+                },
+                {
+                    name: 'Salary',
+                    month:'Apr.',
+                    amount:15400,
+                },
+                {
+                    name: 'Salary',
+                    month:'Apr.',
+                    amount:7500,
+                },
+                {
+                    name: 'Salary',
+                    month:'March.',
+                    amount:31400
+                },
+                {
+                    name: 'Expend',
+                    month:'Feb.',
+                    amount:10000
+                },
+                {
+                    name:'Expend',
+                    month:'Mar.',
+                    amount: 8050
+                },
+                {
+                    name:'Expend',
+                    month:'Apr.',
+                    amount: 12000
+                },
+                {
+                    name: 'Expend',
+                    month:'March.',
+                    amount:10000
+                }
+            ],
+            isGroup: true,
+            xField: 'month',
+            yField: 'amount',
+            seriesField: 'name',
+            colorField: 'name',
+            color: ['#32db32', '#d45'],
+            label: {
+                position: 'middle',
+                layout: [
+                    { type: 'interval-adjust-position' },
+                    { type: 'interval-hide-overlap' },
+                    { type: 'adjust-color' },
+                ],
+            },
         }
     }
     public getMonthDebtSum = () => {
@@ -87,7 +152,7 @@ class Home extends React.Component<any> {
 
     render() {
         return (
-            <div style={{padding:"10px"}}>
+            <div style={{width:"90%", margin:"0 auto"}}>
                 <Divider orientation={'left'}>Statistics</Divider>
                 <Row gutter={16}>
                     <Col span={3}>
@@ -141,12 +206,61 @@ class Home extends React.Component<any> {
                         })
                     }
                 </Row>
-                <Divider orientation={'left'}>Charts</Divider>
-                <Row gutter={16}>
+                <Row gutter={16} style={{marginTop:40}}>
                     <Col span={7}>
                         <DebtPie/>
                     </Col>
-                    <Col span={15}>
+                    <Col span={10}>
+                        <Column
+                            data={this.state.columnData.data}
+                            xField={this.state.columnData.xField}
+                            yField={this.state.columnData.yField}
+                            isGroup
+                            seriesField='name'
+                            groupField='name'
+                            isStack
+                        />
+                    </Col>
+                </Row>
+                <Divider orientation={'left'}>Today</Divider>
+                <Row gutter={16}>
+                    <Col span={9}>
+                        <List>
+                            <List.Item
+                                title={"Testing"}
+                                prefix={"Fuck"}
+                            >
+                                <Space>
+                                    <img style={{
+                                        height: 30
+                                    }} src={Avatar} alt=""/>
+                                    <h1 style={{color:"#d45"}}>￥-32</h1>
+                                </Space>
+                            </List.Item>
+                            <List.Item
+                                title={"Testing"}
+                            >
+                                <Space>
+                                    <img style={{
+                                        height: 30
+                                    }} src={Avatar} alt=""/>
+                                    <h1 style={{color:"#d45"}}>￥-40</h1>
+                                </Space>
+                            </List.Item>
+                            <List.Item
+                                title={"Testing"}
+                            >
+                                <Space>
+                                    <img style={{
+                                        height: 30
+                                    }} src={Avatar} alt=""/>
+                                    <h1 style={{color:"#d45"}}>￥-40</h1>
+                                </Space>
+                            </List.Item>
+
+                        </List>
+                    </Col>
+                    <Col span={9}>
                         <Calendar
                             fullscreen={false}
                             dateCellRender={this.handleDateCellRender}
@@ -154,11 +268,6 @@ class Home extends React.Component<any> {
                         />
                     </Col>
                 </Row>
-
-                <Divider orientation={'left'}>Today</Divider>
-                <List>
-
-                </List>
             </div>
         );
     }
